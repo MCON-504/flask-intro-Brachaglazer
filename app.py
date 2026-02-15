@@ -41,7 +41,7 @@ def echo():
     posted["echoed"] = True
     return jsonify(posted)
 
-@app.route("status/<int:code>")
+@app.route("/status/<int:code>")
 def status(code):
     message = f"This is a {code} error"
     return message
