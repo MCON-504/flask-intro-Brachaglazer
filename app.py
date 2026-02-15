@@ -23,17 +23,22 @@ def calculate():
     num1 = int(request.args.get('num1'))
     num2 = int(request.args.get('num2'))
     operation = request.args.get('operation')
-    if operation == "add":
-        result = num1 + num2
-    elif operation == "sub":
-        result = num1 - num2
-    elif operation == "mul":
-        result = num1 * num2
-    elif operation == "div":
-        result = num1 / num2
-    else:
-        result = None
-    return jsonify({"result": result, "operation": operation})
+    try:
+        if operation == "add":
+            result = num1 + num2
+        elif operation == "sub":
+            result = num1 - num2
+        elif operation == "mul":
+            result = num1 * num2
+        elif operation == "div":
+            result = num1 / num2
+        else:
+            result = None
+        return jsonify({"result": result, "operation": operation})
+    except Exception as e:
+        print(f"Error occurred: {e}")
+        return jsonify({"error": "An error occurred during calculation"}), 500
+
 
 @app.route("/echo", methods=["POST"])
 def echo():
@@ -45,6 +50,32 @@ def echo():
 def status(code):
     message = f"This is a {code} error"
     return message
+
+
+@app.before_request
+def before_request():
+    print(request, request.path)
+
+@app.after_request
+def after_request(response):
+    response.headers['X-Custom-Header'] = 'FlaskRocks'
+    return response
+
+@app.teardown_request
+def teardown_request(exception):
+    print(exception)
+
+
+@app.route('/debug/routes')
+def show_routes():
+    routes = []
+    for rule in app.url_map.iter_rules():
+        routes.append({
+            'endpoint': rule.endpoint,
+            'methods': list(rule.methods),
+            'path': str(rule)
+        })
+    return jsonify(routes)
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
