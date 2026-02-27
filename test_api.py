@@ -7,10 +7,12 @@ print(f"Content: {response.headers.get("Content-Type")}")
 
 response = requests.get('http://localhost:5000/about')
 print(f"Status Code: {response.status_code}")
-print(response)
+print(response.json())
 
 response = requests.get('http://localhost:5000/greet/Bracha')
 print(f"Status Code: {response.status_code}")
+print(f"Response content type:{response.headers.get('Content-Type')}")
+print("Response text:", response.text)
 print(response)
 
 response = requests.get('http://localhost:5000/calculate?num1=4&num2=6&operation=add')
@@ -36,6 +38,8 @@ print("400", response)
 
 response = requests.get('http://localhost:5000/status/500')
 print(f"Status Code: {response.status_code}")
+print(f"Response content type:{response.headers.get('Content-Type')}")
+print("Response json:", response.json())
 print("500", response)
 
 response = requests.get('http://localhost:5000/')
